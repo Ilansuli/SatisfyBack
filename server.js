@@ -33,7 +33,25 @@ app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/station", stationRoutes);
 setupSocketAPI(http);
+app.get("/api/test", async (req, res) => {
+  try {
+    res.send("test");
+  } catch (err) {
+    loggerService.error("Failed to get test", err);
+    res.status(500).send({ err: "Failed to get test" });
+  }
+});
 
+setInterval(async () => {
+  try {
+    const response = await axios.get(
+      `https://satisfy-2v03.onrender.com/api/test`
+    );
+    console.log("Request to / successful:", response.data);
+  } catch (error) {
+    console.error("Error making request to /:", error.message);
+  }
+}, 13 * 60 * 1000);
 // Make every server-side-route to match the index.html
 // so when requesting http://localhost:3030/index.html/station/123 it will still respond with
 // our SPA (single page app) (the index.html file) and allow vue/react-router to take it from there
